@@ -42,12 +42,12 @@ class _GenreFilterState extends State<GenreFilter> {
                 // Perform other actions associated with genre selection
               },
               child: Container(
-                width: 80,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 margin: EdgeInsets.only(left: index == 0 ? 0 : 10),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: selectedGenre == genres[index]
-                        ? Color(0xffFBCD00)
+                        ? const Color(0xffFBCD00)
                         : AppColors.secondaryColor),
                 child: Center(
                   child: Text(
