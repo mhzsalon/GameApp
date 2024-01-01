@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gameapp/Repository/game_list_repo.dart';
 import 'package:gameapp/utils/app-colors.dart';
 import 'package:gameapp/utils/textstyle.dart';
 
@@ -13,7 +15,6 @@ class GenreFilter extends StatefulWidget {
 
 class _GenreFilterState extends State<GenreFilter> {
   String selectedGenre = "All";
-
   @override
   Widget build(BuildContext context) {
     List<String> genres = [
@@ -22,13 +23,14 @@ class _GenreFilterState extends State<GenreFilter> {
       "RPG",
       "Sports",
       "Action",
+      "Arcade",
     ];
 
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 35,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
+        padding: const EdgeInsets.only(left: 30),
         child: ListView.builder(
           itemCount: genres.length,
           scrollDirection: Axis.horizontal,

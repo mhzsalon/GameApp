@@ -1,28 +1,43 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:flutter/material.dart';
-import 'package:gameapp/Screens/game_descrption.dart';
+import 'package:gameapp/Model/game_model.dart';
+import 'package:gameapp/Screens/Game%20Description%20Screen/game_descrption.dart';
+import 'package:gameapp/utils/app-colors.dart';
 import 'package:gameapp/utils/textstyle.dart';
+import 'package:intl/intl.dart';
+
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
 
 class GameCard extends StatelessWidget {
-  const GameCard({
+  Result data;
+  GameCard({
     Key? key,
+    required this.data,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    String releasedDate = DateFormat('yyyy-MM-dd').format(data.released);
     return GestureDetector(
       onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const GameDetailScreen(),
+            builder: (context) => GameDetailScreen(gameData: data),
           )),
       child: Container(
-        width: size.width * 1,
-        height: size.height * 0.3,
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xff1E2430),
+          color: AppColors.secondaryColor,
           borderRadius: BorderRadius.circular(18),
         ),
         child: Column(
@@ -34,10 +49,8 @@ class GameCard extends StatelessWidget {
               width: size.width * 0.9,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                image: const DecorationImage(
-                  image: AssetImage(
-                    "assets/bgImg.jpg",
-                  ),
+                image: DecorationImage(
+                  image: NetworkImage(data.backgroundImage),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -46,8 +59,8 @@ class GameCard extends StatelessWidget {
               height: 10,
             ),
             Text(
-              "Apex Legends - Mirage Edition",
-              maxLines: 1,
+              data.name,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: appTextstyle(16, Colors.white, FontWeight.w600),
             ),
@@ -55,17 +68,17 @@ class GameCard extends StatelessWidget {
               height: 5,
             ),
             Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Release Date: 2021-12-23",
+                  "Release Date: $releasedDate",
                   style: appTextstyle(12, Colors.white54, FontWeight.w500),
                 ),
                 const SizedBox(
                   width: 20,
                 ),
                 Text(
-                  "Metacritic Score: 80",
+                  "Metacritic: ${data.metacritic ?? 0}",
                   style: appTextstyle(12, Colors.white54, FontWeight.w500),
                   textAlign: TextAlign.left,
                 ),
