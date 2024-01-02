@@ -8,8 +8,11 @@ Dart version: 3.2.3
 ## Installation
 After cloning this repository, migrate to gameapp folder. Then, follow the following steps:
 
+This is `inline code`.
+```dart
   flutter pub get
   flutter run
+```
 
 ## Tech Used
 Flutter, Dart
