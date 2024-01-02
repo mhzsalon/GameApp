@@ -1,7 +1,7 @@
-# gameapp
-An application that allows the user to view the reviews of the games.
+## Game Review Application
+An application that allows the user to browse the list of the games and their detailed description.
 
-## VersionsS
+## Versions
 Flutter version: 3.16.5
 Dart version: 3.2.3
 
