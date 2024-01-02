@@ -1,4 +1,4 @@
-## Game Review Application
+## Game App
 An application that allows the user to browse the list of the games and their detailed description.
 
 ## Versions
