@@ -4,19 +4,20 @@ import 'package:gameapp/Repository/game_list_repo.dart';
 import 'package:gameapp/utils/app-colors.dart';
 import 'package:gameapp/utils/textstyle.dart';
 
-class GenreFilter extends StatefulWidget {
+class GenreFilter extends ConsumerStatefulWidget {
   const GenreFilter({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<GenreFilter> createState() => _GenreFilterState();
+  ConsumerState<GenreFilter> createState() => _GenreFilterState();
 }
 
-class _GenreFilterState extends State<GenreFilter> {
-  String selectedGenre = "All";
+class _GenreFilterState extends ConsumerState<GenreFilter> {
+  // String selectedGenre = "All";
   @override
   Widget build(BuildContext context) {
+    final selectedGenre = ref.watch(selectedGenreProvider);
     List<String> genres = [
       "All",
       "Shooter",
@@ -37,10 +38,11 @@ class _GenreFilterState extends State<GenreFilter> {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                setState(() {
-                  // Update the selected genre
-                  selectedGenre = genres[index];
-                });
+                String newGenre = genres[index];
+                ref
+                    .read(selectedGenreProvider.notifier)
+                    .update(newGenre);
+
                 // Perform other actions associated with genre selection
               },
               child: Container(

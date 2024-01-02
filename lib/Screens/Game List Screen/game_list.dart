@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gameapp/Model/game_model.dart';
 import 'package:gameapp/Repository/game_list_repo.dart';
 import 'package:gameapp/Widgets/game-card.dart';
 import 'package:gameapp/Widgets/genre-filter.dart';
@@ -35,14 +36,14 @@ class _GameListScreenState extends State<GameListScreen> {
                     "Game Lists",
                     style: appTextstyle(24, Colors.white, FontWeight.w600),
                   ),
-                  trailing: IconButton(
-                    color: Colors.white,
-                    onPressed: () {},
-                    icon: const Icon(
-                      CupertinoIcons.ellipsis_vertical,
-                      color: Colors.white,
-                    ),
-                  ),
+                  // trailing: IconButton(
+                  //   color: Colors.white,
+                  //   onPressed: () {},
+                  //   icon: const Icon(
+                  //     CupertinoIcons.ellipsis_vertical,
+                  //     color: Colors.white,
+                  //   ),
+                  // ),
                 ),
               ),
 
@@ -53,41 +54,50 @@ class _GameListScreenState extends State<GameListScreen> {
               ),
 
               // Container for displaying game cards
-              SizedBox(
-                height: SizeConfig(context: context).height * 0.9,
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    return ref.watch(remoteResultData).when(
-                          data: (data) {
-                            // Displaying a ListView of GameCards using data from remoteResultData
-                            return ListView.builder(
-                              itemCount: data.length,
-                              shrinkWrap:
-                                  true, // To make sure it only takes the space it needs
+              Consumer(
+                builder: (context, ref, child) {
+                  final selectedGenre = ref.watch(selectedGenreProvider);
 
-                              itemBuilder: (context, index) {
-                                final currentData = data[index];
-                                return GameCard(
-                                  data: currentData,
-                                );
-                              },
-                            );
-                          },
-                          error: (error, stackTrace) {
-                            // Displaying a SnackBar in case of a connection timeout error
-                            return const SnackBar(
-                                content: Text("Connection Time out"));
-                          },
-                          loading: () => SizedBox(
-                            width: SizeConfig(context: context).width,
-                            height: SizeConfig(context: context).height * 0.7,
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
+                  return ref.watch(remoteResultData).when(
+                        data: (data) {
+                          // Convert Iterable<Result> to List<Result>
+                          final List<Result> dataList = data.toList();
+
+                          // Filter the data based on the selected genre
+                          final filteredData = selectedGenre == "All"
+                              ? dataList
+                              : dataList
+                                  .where((game) => game.genres.any(
+                                      (genre) => genre.name == selectedGenre))
+                                  .toList();
+
+                          // Displaying a ListView of GameCards using filteredData
+                          return ListView.builder(
+                            itemCount: filteredData.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              final currentData = filteredData[index];
+                              return GameCard(
+                                data: currentData,
+                              );
+                            },
+                          );
+                        },
+                        error: (error, stackTrace) {
+                          // Displaying a SnackBar in case of a connection timeout error
+                          return const SnackBar(
+                              content: Text("Connection Time out"));
+                        },
+                        loading: () => SizedBox(
+                          width: SizeConfig(context: context).width,
+                          height: SizeConfig(context: context).height * 0.7,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
                           ),
-                        );
-                  },
-                ),
+                        ),
+                      );
+                },
               )
             ],
           ),

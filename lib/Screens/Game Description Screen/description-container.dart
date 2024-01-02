@@ -41,19 +41,20 @@ class DescriptionContainer extends StatelessWidget {
             ImageSlider(imgList: gameData.shortScreenshots),
 
             // "About this game" section
-            ListTile(
-              contentPadding: const EdgeInsets.only(top: 15, right: 5),
-              title: Text(
+            Padding(
+              padding: const EdgeInsets.only(top: 35, bottom: 10),
+              child: Text(
                 "About this game",
                 style: appTextstyle(16, Colors.white, FontWeight.w600),
               ),
-              trailing: IconButton(
-                onPressed: () {},
-                iconSize: 25,
-                icon: const Icon(CupertinoIcons.arrow_right),
-                color: Colors.white,
-              ),
             ),
+            // ListTile(
+            //   contentPadding: const EdgeInsets.only(top: 15, right: 5),
+            //   title: Text(
+            //     "About this game",
+            //     style: appTextstyle(16, Colors.white, FontWeight.w600),
+            //   ),
+            // ),
 
             // Description text
             Padding(
