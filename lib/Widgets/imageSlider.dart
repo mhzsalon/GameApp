@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gameapp/Model/game_model.dart';
 import 'package:gameapp/utils/sizeconfig.dart';
 
 class ImageSlider extends StatelessWidget {
@@ -8,7 +7,7 @@ class ImageSlider extends StatelessWidget {
     required this.imgList,
   }) : super(key: key);
 
-  final List<ShortScreenshot> imgList;
+  final List<String> imgList;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,8 @@ class ImageSlider extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              _showFullScreenImage(context, imgList, index);  // Calling method that displays the image in full screen 
+              _showFullScreenImage(context, imgList,
+                  index); // Calling method that displays the image in full screen
             },
             child: Hero(
               tag: 'image_$index', // Unique tag for each image
@@ -33,7 +33,7 @@ class ImageSlider extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Image.network(
-                  imgList[index].image,
+                  imgList[index],
                   fit: BoxFit.cover,
                 ),
               ),
@@ -45,13 +45,15 @@ class ImageSlider extends StatelessWidget {
   }
 
   // Function to show the full-screen image view
-  void _showFullScreenImage(BuildContext context, List<ShortScreenshot> images, int index) {
+  void _showFullScreenImage(
+      BuildContext context, List<String> images, int index) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => Scaffold(
         body: Center(
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();  // Close the full-screen view when tapped
+              Navigator.of(context)
+                  .pop(); // Close the full-screen view when tapped
             },
             child: Hero(
               tag: 'image_$index', // Use the same tag as in the ImageSlider
@@ -60,7 +62,7 @@ class ImageSlider extends StatelessWidget {
                 controller: PageController(initialPage: index),
                 itemBuilder: (context, pageIndex) {
                   return Image.network(
-                    images[pageIndex].image,
+                    images[pageIndex],
                     fit: BoxFit.contain,
                   );
                 },
