@@ -2,23 +2,34 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gameapp/Model/game_detail_model.dart';
 import 'package:gameapp/Model/game_model.dart';
 import 'package:gameapp/Widgets/imageSlider.dart';
 import 'package:gameapp/utils/app-colors.dart';
 import 'package:gameapp/utils/common.dart';
 import 'package:gameapp/utils/sizeconfig.dart';
 import 'package:gameapp/utils/textstyle.dart';
+import 'package:readmore/readmore.dart';
 
-class DescriptionContainer extends StatelessWidget {
+class DescriptionContainer extends StatefulWidget {
   Result gameData;
+  GameModel model;
 
-  DescriptionContainer({super.key, required this.gameData});
+  DescriptionContainer(
+      {super.key, required this.gameData, required this.model});
 
   @override
+  State<DescriptionContainer> createState() => _DescriptionContainerState();
+}
+
+class _DescriptionContainerState extends State<DescriptionContainer> {
+  @override
   Widget build(BuildContext context) {
+    var filteredDesc = removeHtmlTags(widget.model.description);
+
     return Container(
-      width: SizeConfig(context: context).width,
-      height: SizeConfig(context: context).height * 0.7,
+      // width: SizeConfig(context: context).width,
+      // height: SizeConfig(context: context).height * 0.7,
       decoration: BoxDecoration(
         color: AppColors.modalColor,
         borderRadius: const BorderRadius.only(
@@ -32,13 +43,18 @@ class DescriptionContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Top component of the description container
-            topComponent(context),
+            topComponent(
+              context,
+            ),
             const SizedBox(
               height: 35,
             ),
 
             // ImageSlider to display screenshots
-            ImageSlider(imgList: gameData.shortScreenshots),
+            ImageSlider(imgList: [
+              widget.model.backgroundImage,
+              widget.model.backgroundImageAdditional
+            ]),
 
             // "About this game" section
             Padding(
@@ -48,36 +64,66 @@ class DescriptionContainer extends StatelessWidget {
                 style: appTextstyle(16, Colors.white, FontWeight.w600),
               ),
             ),
-            // ListTile(
-            //   contentPadding: const EdgeInsets.only(top: 15, right: 5),
-            //   title: Text(
-            //     "About this game",
-            //     style: appTextstyle(16, Colors.white, FontWeight.w600),
-            //   ),
-            // ),
 
             // Description text
             Padding(
               padding: const EdgeInsets.only(right: 25),
-              child: Text(
-                StringResource.description,
-                maxLines: 3,
+              child: ReadMoreText(
+                filteredDesc,
+                trimLines: 4,
+                trimCollapsedText: " Read more",
+                trimExpandedText: " Read less",
+                trimMode: TrimMode.Line,
                 textAlign: TextAlign.justify,
-                overflow: TextOverflow.ellipsis,
+                style: appTextstyle(14, Colors.white54, FontWeight.normal),
+              ),
+            ),
+            //Developer Info
+            Padding(
+              padding: const EdgeInsets.only(top: 30, bottom: 10),
+              child: Text(
+                "Developer",
+                style: appTextstyle(16, Colors.white, FontWeight.w600),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Text(
+                widget.model.developers[0].name,
+                textAlign: TextAlign.justify,
+                style: appTextstyle(14, Colors.white54, FontWeight.normal),
+              ),
+            ),
+            //Publisher Info
+            Padding(
+              padding: const EdgeInsets.only(top: 30, bottom: 10),
+              child: Text(
+                "Publisher",
+                style: appTextstyle(16, Colors.white, FontWeight.w600),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Text(
+                widget.model.publishers[0].name,
+                textAlign: TextAlign.justify,
                 style: appTextstyle(14, Colors.white54, FontWeight.normal),
               ),
             ),
 
             // "Other Platforms" section
             Padding(
-              padding: const EdgeInsets.only(top: 35, bottom: 10),
+              padding: const EdgeInsets.only(top: 30, bottom: 10),
               child: Text(
                 "Other Platforms",
                 style: appTextstyle(16, Colors.white, FontWeight.w600),
               ),
             ),
             // List of platforms
-            platformLists(context),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 25.0),
+              child: platformLists(context),
+            ),
           ],
         ),
       ),
@@ -112,7 +158,7 @@ class DescriptionContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  gameData.name,
+                  widget.model.name,
                   maxLines: 2,
                   style: appTextstyle(16, Colors.white, FontWeight.w600),
                 ),
@@ -125,7 +171,7 @@ class DescriptionContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        gameData.genres[0].name,
+                        widget.model.genres[0].name,
                         style:
                             appTextstyle(14, Colors.white60, FontWeight.w400),
                       ),
@@ -145,7 +191,7 @@ class DescriptionContainer extends StatelessWidget {
                               width: 5,
                             ),
                             Text(
-                              gameData.rating,
+                              widget.model.rating,
                               style: appTextstyle(
                                   12, Colors.white, FontWeight.w600),
                             ),
@@ -165,7 +211,7 @@ class DescriptionContainer extends StatelessWidget {
 
   // List of platforms
   SizedBox platformLists(BuildContext context) {
-    List<Platform> platforms = gameData.platforms;
+    List<PlatformElement> platforms = widget.model.platforms;
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 35,

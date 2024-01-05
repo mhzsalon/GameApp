@@ -1,23 +1,30 @@
 // ignore_for_file: use_key_in_widget_constructors
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gameapp/Model/game_model.dart';
+import 'package:gameapp/Repository/game_detail_repo.dart';
 import 'package:gameapp/Repository/game_list_repo.dart';
 import 'package:gameapp/Widgets/game-card.dart';
 import 'package:gameapp/Widgets/genre-filter.dart';
 import 'package:gameapp/utils/sizeconfig.dart';
 import 'package:gameapp/utils/textstyle.dart';
 
-class GameListScreen extends StatefulWidget {
+class GameListScreen extends ConsumerStatefulWidget {
   const GameListScreen({Key? key});
 
   @override
-  State<GameListScreen> createState() => _GameListScreenState();
+  ConsumerState<GameListScreen> createState() => _GameListScreenState();
 }
 
-class _GameListScreenState extends State<GameListScreen> {
+class _GameListScreenState extends ConsumerState<GameListScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ref.read(gameDataProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
